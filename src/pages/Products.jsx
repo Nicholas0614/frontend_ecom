@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProducts } from "../utils/api";
+import { getProducts } from "../utils/api_products";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import InputLabel from "@mui/material/InputLabel";
@@ -14,6 +14,7 @@ import {
   Button,
   Chip,
 } from "@mui/material";
+import Header from "../components/header";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -27,17 +28,7 @@ export default function Products() {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderBottom: "1px solid",
-          borderColor: "grey.400",
-        }}
-      >
-        <h1>Welcome to My Store</h1>
-      </Box>
+      <Header />
       <Box
         sx={{
           display: "flex",
