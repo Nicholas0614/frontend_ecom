@@ -12,16 +12,12 @@ import Paper from "@mui/material/Paper";
 import Swal from "sweetalert2";
 
 export default function CartPage() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(getCart());
 
   let Total = 0;
   for (let i = 0; i < cart.length; i++) {
     Total += cart[i].quantity * cart[i].price;
   }
-
-  useEffect(() => {
-    setCart(getCart());
-  }, []);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -67,6 +63,17 @@ export default function CartPage() {
               Home
             </Button>
             <Button variant="contained">Cart</Button>
+            <Button
+              component={Link}
+              to="/orders"
+              variant="contained"
+              sx={{
+                backgroundColor: "#d9ecffff",
+                color: "rgba(21, 93, 237, 1)",
+              }}
+            >
+              Orders
+            </Button>
           </Box>
         </Box>
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
@@ -137,6 +144,14 @@ export default function CartPage() {
             Home
           </Button>
           <Button variant="contained">Cart</Button>
+          <Button
+            component={Link}
+            to="/orders"
+            variant="contained"
+            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+          >
+            Orders
+          </Button>
         </Box>
       </Box>
 
@@ -153,19 +168,19 @@ export default function CartPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cart.map((item) => (
-                <TableRow key={item._id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell align="right">${item.price}</TableCell>
-                  <TableCell align="right">{item.quantity}</TableCell>
+              {cart.map((product) => (
+                <TableRow key={product._id}>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell align="right">${product.price}</TableCell>
+                  <TableCell align="right">{product.quantity}</TableCell>
                   <TableCell align="right">
-                    ${item.price * item.quantity}
+                    ${product.price * product.quantity}
                   </TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => handleDelete(item._id)}
+                      onClick={() => handleDelete(product._id)}
                     >
                       Remove
                     </Button>
@@ -173,11 +188,7 @@ export default function CartPage() {
                 </TableRow>
               ))}
               <TableRow>
-                <TableCell
-                  colSpan={3}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
-                ></TableCell>
+                <TableCell colSpan={3}></TableCell>
                 <TableCell align="right" sx={{ fontWeight: "bold" }}>
                   ${Total}
                 </TableCell>
@@ -187,7 +198,12 @@ export default function CartPage() {
           </Table>
         </TableContainer>
         <Box display="flex" justifyContent="end" mt={2}>
-          <Button disabled={cart.length === 0} variant="contained">
+          <Button
+            disabled={cart.length === 0}
+            variant="contained"
+            component={Link}
+            to="/checkout"
+          >
             Checkout
           </Button>
         </Box>

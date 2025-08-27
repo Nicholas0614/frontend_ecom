@@ -77,6 +77,14 @@ export default function Products() {
           >
             Cart
           </Button>
+          <Button
+            component={Link}
+            to="/orders"
+            variant="contained"
+            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+          >
+            Order
+          </Button>
         </Box>
       </Box>
       <Container>
@@ -179,7 +187,7 @@ export default function Products() {
                       }}
                       onClick={() => {
                         AddToCart(product);
-                        toast.success(`${product.name} added to cart`);
+                        toast.success(`"${product.name}" added to cart`);
                       }}
                     >
                       Add To Cart

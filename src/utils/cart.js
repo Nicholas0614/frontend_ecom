@@ -1,4 +1,7 @@
 // cart.js
+export function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
 
 // Get all items in the cart
 export function getCart() {
@@ -7,8 +10,13 @@ export function getCart() {
 }
 
 // Save the cart to localStorage
-export function updateCart(cart) {
-  localStorage.setItem("cart", JSON.stringify(cart));
+export function updateCart(productId, updatedProduct) {
+  let cart = getCart();
+  cart = cart.map((item) =>
+    item._id === productId ? { ...item, ...updatedProduct } : item
+  );
+  saveCart(cart);
+  return cart;
 }
 
 // Add product to cart
@@ -22,11 +30,14 @@ export function AddToCart(product) {
     cart.push({ ...product, quantity: 1 });
   }
 
-  updateCart(cart);
+  saveCart(cart);
+  return cart;
 }
 
 // Delete item from cart
-export function deleteItemFromCart(id) {
-  const cart = getCart().filter((item) => item._id !== id);
-  updateCart(cart);
+export function deleteItemFromCart(productId) {
+  let cart = getCart();
+  cart = cart.filter((item) => item._id !== productId);
+  saveCart(cart);
+  return cart;
 }
