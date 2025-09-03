@@ -74,6 +74,17 @@ export default function CartPage() {
             >
               Orders
             </Button>
+            <Button
+              component={Link}
+              to="/categories"
+              variant="contained"
+              sx={{
+                backgroundColor: "#d9ecffff",
+                color: "rgba(21, 93, 237, 1)",
+              }}
+            >
+              Categories
+            </Button>
           </Box>
         </Box>
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
@@ -151,6 +162,14 @@ export default function CartPage() {
             sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
           >
             Orders
+          </Button>
+          <Button
+            component={Link}
+            to="/categories"
+            variant="contained"
+            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+          >
+            Categories
           </Button>
         </Box>
       </Box>

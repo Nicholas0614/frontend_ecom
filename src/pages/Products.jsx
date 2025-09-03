@@ -14,23 +14,38 @@ import {
   Typography,
   Button,
   Chip,
+  CardMedia,
 } from "@mui/material";
 import Header from "../components/header";
 import { deleteProduct } from "../utils/api_products";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { AddToCart } from "../utils/cart";
+import { API_URL } from "../utils/constants";
+import { getCategories } from "../utils/api_categories";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState("all");
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  // fetch whenever page or category changes
+  useEffect(() => {
+    getProducts(selectedCategory, page).then((data) => setProducts(data));
+  }, [page, selectedCategory]);
+
+  const filteredProducts =
+    selectedCategory === "all"
+      ? products
+      : products.filter((p) => p.category === selectedCategory);
 
   useEffect(() => {
-    getProducts(category, page).then((data) => {
-      setProducts(data);
+    getCategories().then((data) => {
+      setCategories(data);
     });
-  }, [category, page]);
+  }, []);
 
   const handleProductDelete = async (id) => {
     Swal.fire({
@@ -85,6 +100,30 @@ export default function Products() {
           >
             Order
           </Button>
+          <Button
+            component={Link}
+            to="/categories"
+            variant="contained"
+            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+          >
+            Categories
+          </Button>
+          <Button
+            component={Link}
+            to="/signup"
+            variant="contained"
+            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+          >
+            SignUp
+          </Button>
+          <Button
+            component={Link}
+            to="/login"
+            variant="contained"
+            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+          >
+            Login
+          </Button>
         </Box>
       </Box>
       <Container>
@@ -121,20 +160,19 @@ export default function Products() {
               Filter By Category
             </InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={category}
-              label="Genre"
-              onChange={(e) => {
-                setCategory(e.target.value);
-                setPage(1);
+              value={selectedCategory}
+              onChange={(event) => {
+                setSelectedCategory(event.target.value);
+                setPage(1); // reset page when category changes
               }}
+              sx={{ minWidth: 200, mb: 2 }}
             >
-              <MenuItem value="all">ALL</MenuItem>
-              <MenuItem value={"Consoles"}>Consoles</MenuItem>
-              <MenuItem value={"Games"}>Games</MenuItem>
-              <MenuItem value={"Accessories"}>Accessories</MenuItem>
-              <MenuItem value={"Subscriptions"}>Subscriptions</MenuItem>
+              <MenuItem value="all">All</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat._id} value={cat.label}>
+                  {cat.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -142,13 +180,23 @@ export default function Products() {
       <Container>
         <Box sx={{ width: "100%" }}>
           <Grid container spacing={2}>
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product._id}>
                 <Card
                   sx={{
                     alignContent: "center",
                   }}
                 >
+                  <CardMedia
+                    component="img"
+                    height="100"
+                    image={
+                      API_URL +
+                      (product.image
+                        ? product.image
+                        : "uploads/default_image.jpg")
+                    }
+                  />
                   <CardContent>
                     <Typography gutterBottom>{product.name}</Typography>
 

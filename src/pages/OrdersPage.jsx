@@ -74,7 +74,7 @@ export default function OrdersPage() {
         }}
       >
         <Typography variant="h3" sx={{ fontWeight: 700 }}>
-          Checkout
+          Orders
         </Typography>
         <Box display="flex" gap={3} sx={{ justifyContent: "center", pt: 3 }}>
           <Button
@@ -101,6 +101,14 @@ export default function OrdersPage() {
           </Button>
 
           <Button variant="contained">Orders</Button>
+          <Button
+            component={Link}
+            to="/categories"
+            variant="contained"
+            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+          >
+            Categories
+          </Button>
         </Box>
       </Box>
       <Container maxWidth="lg" sx={{ textAlign: "center" }}>
@@ -185,9 +193,7 @@ export default function OrdersPage() {
                       >
                         Delete
                       </Button>
-                    ) : (
-                      ""
-                    )}
+                    ) : null}
                   </TableCell>
                 </TableRow>
               ))}

@@ -12,12 +12,13 @@ export async function getProducts(category, page = 1) {
   return response.data;
 }
 
-export async function addProduct(name, description, price, category) {
+export async function addProduct(name, description, price, category, image) {
   const response = await axios.post(API_URL + "products", {
     name: name,
     description: description,
     price: price,
     category: category,
+    image,
   });
   return response.data;
 }
@@ -27,12 +28,20 @@ export async function getProduct(id) {
   return response.data;
 }
 
-export async function updateProduct(id, name, description, price, category) {
+export async function updateProduct(
+  id,
+  name,
+  description,
+  price,
+  category,
+  image
+) {
   const response = await axios.put(API_URL + "products/" + id, {
     name: name,
     description: description,
     price: price,
     category: category,
+    image,
   });
   return response.data;
 }

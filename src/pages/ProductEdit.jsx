@@ -13,6 +13,23 @@ import { updateProduct, getProduct } from "../utils/api_products";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { uploadImage } from "../utils/api_image";
+import { API_URL } from "../utils/constants";
+import { getCategories } from "../utils/api_categories";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 export default function ProductEdit() {
   const { id } = useParams();
@@ -22,8 +39,11 @@ export default function ProductEdit() {
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
   const [error, setError] = useState(null);
+  const [image, setImage] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   // load the product data from the backend API , and assign it the state
+
   useEffect(() => {
     getProduct(id).then((productData) => {
       //update the state with the productData
@@ -32,11 +52,18 @@ export default function ProductEdit() {
         setDescription(productData ? productData.description : "");
         setPrice(productData ? productData.price : 0);
         setCategory(productData ? productData.category : "");
+        setImage(productData ? productData.image : null);
       } else {
         setError("Product not found");
       }
     });
   }, [id]);
+
+  useEffect(() => {
+    getCategories().then((data) => {
+      setCategories(data);
+    });
+  });
 
   const handleFormSubmit = async (e) => {
     // 1. check for error
@@ -46,7 +73,7 @@ export default function ProductEdit() {
 
     try {
       // 2. trigger the API to update product
-      await updateProduct(id, name, description, price, category);
+      await updateProduct(id, name, description, price, category, image);
 
       // 3. if successful, redirect user back to home page and show success message
       toast.success("Product has been updated");
@@ -128,12 +155,50 @@ export default function ProductEdit() {
                   setCategory(e.target.value);
                 }}
               >
-                <MenuItem value={"Consoles"}>Consoles</MenuItem>
-                <MenuItem value={"Games"}>Games</MenuItem>
-                <MenuItem value={"Accessories"}>Accessories</MenuItem>
-                <MenuItem value={"Subscriptions"}>Subscriptions</MenuItem>
+                {categories.map((cate) => (
+                  <MenuItem key={cate._id} value={cate.label}>
+                    {cate.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
+          </Box>
+          <Box
+            mb={2}
+            sx={{ display: "flex", gap: "10px", alignItems: "center" }}
+          >
+            {image ? (
+              <>
+                <img src={API_URL + image} width="100px" />
+                <Button
+                  color="info"
+                  variant="contained"
+                  size="small"
+                  onClick={() => setImage(null)}
+                >
+                  Remove
+                </Button>
+              </>
+            ) : (
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload image
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={async (event) => {
+                    const data = await uploadImage(event.target.files[0]);
+                    setImage(data.image_url);
+                    // {image_url: "uploads/image.jpg"}
+                  }}
+                  accept="image/*"
+                />
+              </Button>
+            )}
           </Box>
           <Box sx={{ mb: 2, justifyItems: "start" }}>
             <Button
