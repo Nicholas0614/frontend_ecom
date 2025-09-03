@@ -23,13 +23,18 @@ import { toast } from "sonner";
 import { AddToCart } from "../utils/cart";
 import { API_URL } from "../utils/constants";
 import { getCategories } from "../utils/api_categories";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router";
 
 export default function Products() {
+  const [cookies, setCookie, removeCookie] = useCookies(["dlwlrma"]);
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState("all");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const { dlwlrma } = cookies;
 
   // fetch whenever page or category changes
   useEffect(() => {
@@ -82,6 +87,13 @@ export default function Products() {
         <Typography variant="h3" sx={{ fontWeight: 700 }}>
           Welcome to My Store
         </Typography>
+        {dlwlrma && (
+          <Typography variant="body1" align="center">
+            Current Logged In User:
+            <br />
+            {dlwlrma.name} ({dlwlrma.email})
+          </Typography>
+        )}
         <Box display="flex" gap={3} sx={{ justifyContent: "center", pt: 3 }}>
           <Button variant="contained">Home</Button>
           <Button
@@ -108,22 +120,46 @@ export default function Products() {
           >
             Categories
           </Button>
-          <Button
-            component={Link}
-            to="/signup"
-            variant="contained"
-            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
-          >
-            SignUp
-          </Button>
-          <Button
-            component={Link}
-            to="/login"
-            variant="contained"
-            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
-          >
-            Login
-          </Button>
+          {dlwlrma ? (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#d9ecffff",
+                color: "rgba(21, 93, 237, 1)",
+              }}
+              onClick={() => {
+                removeCookie("dlwlrma");
+                navigate("/");
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <>
+              <Button
+                component={Link}
+                to="/signup"
+                variant="contained"
+                sx={{
+                  backgroundColor: "#d9ecffff",
+                  color: "rgba(21, 93, 237, 1)",
+                }}
+              >
+                SignUp
+              </Button>
+              <Button
+                component={Link}
+                to="/login"
+                variant="contained"
+                sx={{
+                  backgroundColor: "#d9ecffff",
+                  color: "rgba(21, 93, 237, 1)",
+                }}
+              >
+                Login
+              </Button>
+            </>
+          )}
         </Box>
       </Box>
       <Container>

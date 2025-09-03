@@ -11,26 +11,42 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { Signup } from "../utils/api_users";
 import { toast } from "sonner";
+import { useCookies } from "react-cookie";
+import validator from "email-validator";
+import { useNavigate } from "react-router";
 
 export default function SignupPage() {
+  const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies(["dlwlrma"]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
   const handleFormSubmit = async (e) => {
-    // if (!name || !email || !password || !password2) {
-    //   toast.error("Please fill up the fields");
-    // }
-    // try {
-    //   await Signup(name, email, password);
-    //   toast.success("Sign up successfully");
-    // } catch (e) {
-    //   toast.error(e.message);
-    // }
-
-    const data = await Signup(name, email, password);
-    console.log(data);
+    try {
+      // 1. check for error
+      if (!name || !email || !password || !password2) {
+        toast.error("Please fill up all the fields");
+      } else if (!validator.validate(email)) {
+        // 2. make sure the email is valid
+        toast.error("Please use a valid email address");
+      } else if (password !== password2) {
+        // 2. check for password match
+        toast.error("Password is not match");
+      } else {
+        const userData = await Signup(name, email, password);
+        // set cookies
+        setCookie("dlwlrma", userData, {
+          maxAge: 60 * 60 * 8, // expire in 8 hours
+        });
+        toast.success("You have successfully signed up an account!");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -102,7 +118,7 @@ export default function SignupPage() {
               onChange={(e) => setName(e.target.value)}
             ></TextField>
           </Box>
-          <InputLabel>Email</InputLabel>
+          <InputLabel sx={{ mt: "20px" }}>Email</InputLabel>
           <Box sx={{ mt: "5px" }}>
             <TextField
               fullWidth
@@ -113,7 +129,7 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
             ></TextField>
           </Box>
-          <InputLabel>Password</InputLabel>
+          <InputLabel sx={{ mt: "20px" }}>Password</InputLabel>
           <Box sx={{ mt: "5px" }}>
             <TextField
               fullWidth
@@ -124,7 +140,7 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
             ></TextField>
           </Box>
-          <InputLabel>Confirm Password</InputLabel>
+          <InputLabel sx={{ mt: "20px" }}>Confirm Password</InputLabel>
           <Box sx={{ mt: "5px" }}>
             <TextField
               fullWidth

@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router";
+import { Toaster } from "sonner";
+import { CookiesProvider } from "react-cookie";
 import Products from "./pages/Products";
 import ProductAdd from "./pages/ProductAdd";
 import ProductEdit from "./pages/ProductEdit";
-import { Toaster } from "sonner";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import PaymentVerify from "./pages/PaymentVerify";
@@ -14,21 +15,23 @@ import SignupPage from "./pages/SignupPage";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Products />} />
-          <Route path="/products/new" element={<ProductAdd />} />
-          <Route path="/products/:id/edit" element={<ProductEdit />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/verify-payment" element={<PaymentVerify />} />
-          <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
+      <CookiesProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Products />} />
+            <Route path="/products/new" element={<ProductAdd />} />
+            <Route path="/products/:id/edit" element={<ProductEdit />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/verify-payment" element={<PaymentVerify />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+          <Toaster />
+        </BrowserRouter>
+      </CookiesProvider>
     </div>
   );
 }

@@ -7,27 +7,37 @@ import {
   Container,
   Paper,
 } from "@mui/material";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import { Login } from "../utils/api_users";
 import { toast } from "sonner";
+import { useCookies } from "react-cookie";
+import { Navigate } from "react-router";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies(["dlwlrma"]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleFormSubmit = async (e) => {
-    // if (!email || !password) {
-    //   toast.error("Please fill up the fields");
-    // }
-    // try {
-    //   await Login(email, password);
-    //   toast.success("Login successfully");
-    // } catch (e) {
-    //   toast.error(e.message);
-    // }
-    const data = Login(email, password);
-    console.log(data);
+    try {
+      // 1. check for error
+      if (!email || !password) {
+        toast.error("Please fill up all the fields");
+      } else {
+        const userData = await Login(email, password);
+        // set cookies
+        setCookie("dlwlrma", userData, {
+          maxAge: 60 * 60 * 8,
+        });
+        toast.success("You have successfully logged in!");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -49,7 +59,10 @@ export default function LoginPage() {
             component={Link}
             to="/"
             variant="contained"
-            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+            sx={{
+              backgroundColor: "#d9ecffff",
+              color: "rgba(21, 93, 237, 1)",
+            }}
           >
             Home
           </Button>
@@ -57,7 +70,10 @@ export default function LoginPage() {
             component={Link}
             to="/cart"
             variant="contained"
-            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+            sx={{
+              backgroundColor: "#d9ecffff",
+              color: "rgba(21, 93, 237, 1)",
+            }}
           >
             Cart
           </Button>
@@ -65,7 +81,10 @@ export default function LoginPage() {
             component={Link}
             to="/orders"
             variant="contained"
-            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+            sx={{
+              backgroundColor: "#d9ecffff",
+              color: "rgba(21, 93, 237, 1)",
+            }}
           >
             Order
           </Button>
@@ -73,7 +92,10 @@ export default function LoginPage() {
             component={Link}
             to="/categories"
             variant="contained"
-            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+            sx={{
+              backgroundColor: "#d9ecffff",
+              color: "rgba(21, 93, 237, 1)",
+            }}
           >
             Categories
           </Button>
@@ -81,7 +103,10 @@ export default function LoginPage() {
             component={Link}
             to="/signup"
             variant="contained"
-            sx={{ backgroundColor: "#d9ecffff", color: "rgba(21, 93, 237, 1)" }}
+            sx={{
+              backgroundColor: "#d9ecffff",
+              color: "rgba(21, 93, 237, 1)",
+            }}
           >
             SignUp
           </Button>
