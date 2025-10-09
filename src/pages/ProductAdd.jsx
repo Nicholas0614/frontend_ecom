@@ -19,6 +19,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { uploadImage } from "../utils/api_image";
 import { API_URL } from "../utils/constants";
 import { getCategories } from "../utils/api_categories";
+import { useCookies } from "react-cookie";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -34,6 +35,9 @@ const VisuallyHiddenInput = styled("input")({
 
 export default function ProductAdd() {
   const navigate = useNavigate();
+  const [cookies] = useCookies(["currentuser"]);
+  const { currentuser = {} } = cookies;
+  const { token = "" } = currentuser;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -45,7 +49,7 @@ export default function ProductAdd() {
     getCategories().then((data) => {
       setCategories(data);
     });
-  });
+  }, []);
 
   const handleFormSubmit = async (e) => {
     // 1. check for error
@@ -54,7 +58,7 @@ export default function ProductAdd() {
     }
     // 2. trigger the API to create new product
     try {
-      await addProduct(name, description, price, category, image);
+      await addProduct(name, description, price, category, image, token);
       // 3. if successful , redirect user back to home page and show success message
       toast.success("New product has been added");
       navigate("/");

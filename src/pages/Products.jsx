@@ -27,14 +27,14 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router";
 
 export default function Products() {
-  const [cookies, setCookie, removeCookie] = useCookies(["dlwlrma"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState("all");
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const { dlwlrma } = cookies;
+  const { currentuser } = cookies;
 
   // fetch whenever page or category changes
   useEffect(() => {
@@ -87,11 +87,11 @@ export default function Products() {
         <Typography variant="h3" sx={{ fontWeight: 700 }}>
           Welcome to My Store
         </Typography>
-        {dlwlrma && (
+        {currentuser && (
           <Typography variant="body1" align="center">
             Current Logged In User:
             <br />
-            {dlwlrma.name} ({dlwlrma.email})
+            {currentuser.name} ({currentuser.email})
           </Typography>
         )}
         <Box display="flex" gap={3} sx={{ justifyContent: "center", pt: 3 }}>
@@ -120,7 +120,7 @@ export default function Products() {
           >
             Categories
           </Button>
-          {dlwlrma ? (
+          {currentuser ? (
             <Button
               variant="contained"
               sx={{
@@ -128,7 +128,7 @@ export default function Products() {
                 color: "rgba(21, 93, 237, 1)",
               }}
               onClick={() => {
-                removeCookie("dlwlrma");
+                removeCookie("currentuser");
                 navigate("/");
               }}
             >

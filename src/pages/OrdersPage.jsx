@@ -12,22 +12,26 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Swal from "sweetalert2";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useCookies } from "react-cookie";
 
 export default function OrdersPage() {
   // store orders data from API
 
+  const [cookies] = useCookies(["currentuser"]);
+  const { currentuser = {} } = cookies;
+  const { token = "" } = currentuser;
   const [orders, setOrders] = useState([]);
 
   // call the API
   useEffect(() => {
-    getOrders()
+    getOrders(token)
       .then((data) => {
         setOrders(data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [token]);
 
   const handleUpdate = async (id, newStatus) => {
     try {
@@ -55,7 +59,7 @@ export default function OrdersPage() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await deleteOrder(id);
-        const updatedOrders = await getOrders();
+        const updatedOrders = await getOrders(token);
         setOrders(updatedOrders);
       }
     });

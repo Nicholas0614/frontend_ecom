@@ -2,8 +2,12 @@ import axios from "axios";
 
 import { API_URL } from "./constants";
 
-export async function getOrders() {
-  const response = await axios.get(API_URL + "orders");
+export async function getOrders(token) {
+  const response = await axios.get(API_URL + "orders", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
   return response.data;
 }
 

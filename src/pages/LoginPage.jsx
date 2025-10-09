@@ -16,7 +16,7 @@ import { Navigate } from "react-router";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["dlwlrma"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -28,7 +28,7 @@ export default function LoginPage() {
       } else {
         const userData = await Login(email, password);
         // set cookies
-        setCookie("dlwlrma", userData, {
+        setCookie("currentuser", userData, {
           maxAge: 60 * 60 * 8,
         });
         toast.success("You have successfully logged in!");

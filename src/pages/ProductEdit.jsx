@@ -18,6 +18,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { uploadImage } from "../utils/api_image";
 import { API_URL } from "../utils/constants";
 import { getCategories } from "../utils/api_categories";
+import { useCookies } from "react-cookie";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -34,6 +35,9 @@ const VisuallyHiddenInput = styled("input")({
 export default function ProductEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [cookies] = useCookies(["currentuser"]);
+  const { currentuser = {} } = cookies;
+  const { token = "" } = currentuser;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -63,7 +67,7 @@ export default function ProductEdit() {
     getCategories().then((data) => {
       setCategories(data);
     });
-  });
+  }, []);
 
   const handleFormSubmit = async (e) => {
     // 1. check for error
@@ -73,7 +77,7 @@ export default function ProductEdit() {
 
     try {
       // 2. trigger the API to update product
-      await updateProduct(id, name, description, price, category, image);
+      await updateProduct(id, name, description, price, category, image, token);
 
       // 3. if successful, redirect user back to home page and show success message
       toast.success("Product has been updated");

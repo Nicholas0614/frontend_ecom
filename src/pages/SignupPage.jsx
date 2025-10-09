@@ -17,7 +17,7 @@ import { useNavigate } from "react-router";
 
 export default function SignupPage() {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["dlwlrma"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +37,7 @@ export default function SignupPage() {
       } else {
         const userData = await Signup(name, email, password);
         // set cookies
-        setCookie("dlwlrma", userData, {
+        setCookie("currentuser", userData, {
           maxAge: 60 * 60 * 8, // expire in 8 hours
         });
         toast.success("You have successfully signed up an account!");
